@@ -1,30 +1,23 @@
 from fastapi import FastAPI
-from uuid import uuid4, UUID
-from fastapi.exceptions import HTTPException
+from uuid import UUID
 from app.schemas.memory import MemoryCreate
 from app.schemas.memory import MemoryResponse
+from app.services.memory_service import (
+    create,
+    get,
+    get_id
+)
 
 app = FastAPI()
 
-fake_memory_db: list[MemoryResponse] = []
-
 @app.post('/memory', response_model=MemoryResponse)
 def create_memory(memory: MemoryCreate):
-    stored_memory = MemoryResponse(
-        id=uuid4(),
-        memory=memory.memory,
-        type=memory.type,
-    )
-    fake_memory_db.append(stored_memory)
-    return stored_memory
+    return create(memory)
 
 @app.get('/memory', response_model=list[MemoryResponse])
-def get_memory() -> list[MemoryResponse]:
-    return fake_memory_db
+def get_memories() -> list[MemoryResponse]:
+    return get()
 
 @app.get('/memory/{id}', response_model=MemoryResponse)
 def get_memory_by_id(id: UUID):
-    for memory in fake_memory_db:
-        if memory.id == id:
-            return memory
-    raise HTTPException(status_code=404, detail="Memory not found")
+    return get_id(id)
