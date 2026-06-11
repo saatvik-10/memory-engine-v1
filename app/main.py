@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.db.dependencies import get_db
 from fastapi.exceptions import HTTPException
 from app.schemas.search import SearchReq
-from app.services.search_service import search_memories
+from app.services.search_service import search
 
 app = FastAPI()
 
@@ -32,6 +32,6 @@ def get_memory_by_id(id: UUID, db: Session = Depends(get_db)):
     return memory
 
 
-@app.post("memory/search")
-def search(req: SearchReq, db: Session = Depends(get_db)):
-    return search_memories(query=req.query, top_k=req.top_k, db=db)
+@app.post("/memory/search")
+def search_memories(req: SearchReq, db: Session = Depends(get_db)):
+    return search(query=req.query, top_k=req.top_k, db=db)
