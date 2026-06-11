@@ -1,26 +1,27 @@
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
+
+from app.models.memory import Memory
 from app.schemas.memory import MemoryCreate
-from app.schemas.memory import MemoryResponse
-from fastapi.exceptions import HTTPException
+from sqlalchemy.orm import Session
 
-fake_memory_db = []
 
-def create(memory: MemoryCreate):
-    stored_memory = MemoryResponse(
-        id=uuid4(),
+def create(memory: MemoryCreate, db: Session):
+    stored_memory = Memory(
+        id=str(uuid4()),
         memory=memory.memory,
         type=memory.type,
     )
-    fake_memory_db.append(stored_memory)
+
+    db.add(stored_memory)
+    db.commit()
+    db.refresh(stored_memory)
+
     return stored_memory
 
 
-def get() -> list[MemoryResponse]:
-    return fake_memory_db
+def get(db: Session):
+    return db.query(Memory).all()
 
 
-def get_id(id: UUID):
-    for memory in fake_memory_db:
-        if memory.id == id:
-            return memory
-    raise HTTPException(status_code=404, detail="Memory not found")
+def get_id(id: UUID, db: Session):
+    return db.query(Memory).filter(Memory.id == str(id)).first()
