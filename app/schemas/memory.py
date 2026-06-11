@@ -1,10 +1,12 @@
 from pydantic import BaseModel
 from uuid import UUID
+from datetime import datetime
 
 
 class MemoryCreate(BaseModel):
     memory: str
     type: str
+    category: str
 
 
 class MemoryResponse(BaseModel):
@@ -12,4 +14,4 @@ class MemoryResponse(BaseModel):
     memory: str
     type: str
     category: str
-    created_at: str
+    created_at: datetime

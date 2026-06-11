@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import declarative_base
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -11,4 +12,4 @@ class Memory(Base):
     memory = Column(String, nullable=False)
     type = Column(String, nullable=False)
     category = Column(String, nullable=False)
-    created_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
