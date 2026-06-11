@@ -6,6 +6,8 @@ from app.services.memory_service import create, get, get_id
 from sqlalchemy.orm import Session
 from app.db.dependencies import get_db
 from fastapi.exceptions import HTTPException
+from app.schemas.search import SearchReq
+from app.services.search_service import search_memories
 
 app = FastAPI()
 
@@ -28,3 +30,8 @@ def get_memory_by_id(id: UUID, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Memory not found")
 
     return memory
+
+
+@app.post("memory/search")
+def search(req: SearchReq, db: Session = Depends(get_db)):
+    return search_memories(query=req.query, top_k=req.top_k, db=db)
