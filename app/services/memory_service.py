@@ -2,6 +2,7 @@ from uuid import UUID, uuid4
 
 from app.models.memory import Memory
 from app.schemas.memory import MemoryCreate
+from app.services.embedding_service import generate_embedding
 from sqlalchemy.orm import Session
 
 
@@ -10,6 +11,8 @@ def create(memory: MemoryCreate, db: Session):
         id=str(uuid4()),
         memory=memory.memory,
         type=memory.type,
+        embedding=generate_embedding(memory.memory),
+        category=memory.category,
     )
 
     db.add(stored_memory)
