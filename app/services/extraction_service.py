@@ -10,13 +10,11 @@ MEMORY_KEYWORDS = [
     "want",
     "plan",
     "exploring",
-    "studying"
+    "studying",
 ]
+
 
 def should_extract(text: str) -> bool:
     text = text.lower()
-    
-    return any(
-        keyword in text
-        for keyword in MEMORY_KEYWORDS
-    )
+
+    return any(keyword in text for keyword in MEMORY_KEYWORDS)
