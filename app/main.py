@@ -9,6 +9,8 @@ from fastapi.exceptions import HTTPException
 from app.schemas.search import SearchReq
 from app.services.search_service import search
 from app.services.extraction_service import should_extract
+from app.schemas.ingest import IngestRequest
+from app.services.ingestion_service import ingest_message
 
 app = FastAPI()
 
@@ -37,8 +39,17 @@ def get_memory_by_id(id: UUID, db: Session = Depends(get_db)):
 def search_memories(req: SearchReq, db: Session = Depends(get_db)):
     return search(query=req.query, top_k=req.top_k, db=db)
 
+
 @app.post("/memory/check")
 def check_memory(text: str):
-    return {
-        "should_extract": should_extract(text)
-    }
+    return {"should_extract": should_extract(text)}
+
+@app.post("/ingest")
+def ingest(
+    req: IngestRequest,
+    db: Session = Depends(get_db)
+):
+    return ingest_message(
+        req.message,
+        db
+    )
