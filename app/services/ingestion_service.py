@@ -6,6 +6,7 @@ from app.schemas.memory import MemoryCreate
 from app.services.memory_service import create
 from sqlalchemy.orm import Session
 from app.services.classifier_service import classify_memory
+from app.services.importance_service import calculate_importance
 
 
 def ingest_message(message: str, db: Session):
@@ -20,7 +21,7 @@ def ingest_message(message: str, db: Session):
 
     for memory in approved_memories:
         memory_payload = MemoryCreate(
-            memory=memory, type="semantic", category=classify_memory(memory)
+            memory=memory, type="semantic", category=classify_memory(memory), importance=calculate_importance(classify_memory(memory))
         )
 
         stored_memory = create(memory_payload, db)
@@ -31,6 +32,7 @@ def ingest_message(message: str, db: Session):
                 "memory": stored_memory.memory,
                 "type": stored_memory.type,
                 "category": stored_memory.category,
+                "importance": stored_memory.importance
             }
         )
 
