@@ -13,6 +13,7 @@ def create(memory: MemoryCreate, db: Session):
         type=memory.type,
         embedding=generate_embedding(memory.memory),
         importance=memory.importance,
+        confidence=memory.confidence,
         category=memory.category,
     )
 
