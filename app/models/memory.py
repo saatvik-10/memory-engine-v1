@@ -14,5 +14,6 @@ class Memory(Base):
     type = Column(String, nullable=False)
     embedding = Column(Vector(384), nullable=True)
     importance = Column(Float, nullable=False)
+    confidence = Column(Float, nullable=False, default=0.50)
     category = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
