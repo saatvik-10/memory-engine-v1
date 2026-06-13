@@ -12,6 +12,7 @@ def create(memory: MemoryCreate, db: Session):
         memory=memory.memory,
         type=memory.type,
         embedding=generate_embedding(memory.memory),
+        importance=memory.importance,
         category=memory.category,
     )
 
