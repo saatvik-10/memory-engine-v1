@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime
+from sqlalchemy import Column, String, DateTime, Float
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
 from pgvector.sqlalchemy import Vector
@@ -13,5 +13,6 @@ class Memory(Base):
     memory = Column(String, nullable=False)
     type = Column(String, nullable=False)
     embedding = Column(Vector(384), nullable=True)
+    importance = Column(Float, nullable=False)
     category = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
