@@ -7,6 +7,7 @@ class MemoryCreate(BaseModel):
     memory: str
     type: str
     category: str
+    importance: float
 
 
 class MemoryResponse(BaseModel):
@@ -14,4 +15,5 @@ class MemoryResponse(BaseModel):
     memory: str
     type: str
     category: str
+    importance: float
     created_at: datetime
