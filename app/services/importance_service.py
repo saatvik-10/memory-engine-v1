@@ -9,8 +9,6 @@ CATEGORY_IMPORTANCE = {
     "general": 0.50,
 }
 
+
 def calculate_importance(category: str):
-    return CATEGORY_IMPORTANCE.get(
-        category,
-        0.50
-    )
+    return CATEGORY_IMPORTANCE.get(category, 0.50)
