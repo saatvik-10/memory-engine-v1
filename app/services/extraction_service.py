@@ -25,10 +25,12 @@ def extract_memories(text: str):
 
     text = text.lower()
 
-    if "solana" in text:
-        memories.append("User is learning Solana")
+    # if "solana" in text:
+    #     memories.append("User is learning Solana")
 
-    if "ai" in text:
-        memories.append("User is interest in AI Systems")
+    # if "ai" in text:
+    #     memories.append("User is interest in AI Systems")
+    
+    memories.append(text)
 
     return memories

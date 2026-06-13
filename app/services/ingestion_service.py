@@ -5,6 +5,7 @@ from app.services.judge_service import judge_memories
 from app.schemas.memory import MemoryCreate
 from app.services.memory_service import create
 from sqlalchemy.orm import Session
+from app.services.classifier_service import classify_memory
 
 
 def ingest_message(message: str, db: Session):
@@ -19,12 +20,10 @@ def ingest_message(message: str, db: Session):
 
     for memory in approved_memories:
         memory_payload = MemoryCreate(
-            memory=memory, type="semantic", category="general"
+            memory=memory, type="semantic", category=classify_memory(memory)
         )
 
         stored_memory = create(memory_payload, db)
-
-        print(type(stored_memory))
 
         stored_memories.append(
             {
