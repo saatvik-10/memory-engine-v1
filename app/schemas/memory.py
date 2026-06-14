@@ -19,3 +19,4 @@ class MemoryResponse(BaseModel):
     importance: float
     confidence: float
     created_at: datetime
+    updated_at: datetime
