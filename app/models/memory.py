@@ -16,4 +16,5 @@ class Memory(Base):
     importance = Column(Float, nullable=False)
     confidence = Column(Float, nullable=False, default=0.50)
     category = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
