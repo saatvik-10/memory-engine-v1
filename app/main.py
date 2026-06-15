@@ -11,6 +11,7 @@ from app.services.search_service import search
 from app.services.extraction_service import should_extract
 from app.schemas.ingest import IngestRequest
 from app.services.ingestion_service import ingest_message
+from app.services.reflection_service import generate_reflections
 
 app = FastAPI()
 
@@ -44,12 +45,13 @@ def search_memories(req: SearchReq, db: Session = Depends(get_db)):
 def check_memory(text: str):
     return {"should_extract": should_extract(text)}
 
+
 @app.post("/ingest")
-def ingest(
-    req: IngestRequest,
-    db: Session = Depends(get_db)
-):
-    return ingest_message(
-        req.message,
-        db
-    )
+def ingest(req: IngestRequest, db: Session = Depends(get_db)):
+    return ingest_message(req.message, db)
+
+
+@app.post("/reflect")
+def reflection_memory(db: Session = Depends(get_db)):
+    reflections = generate_reflections(db)
+    return {"reflections_created": len(reflections)}
