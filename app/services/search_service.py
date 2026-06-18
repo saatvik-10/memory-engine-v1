@@ -1,6 +1,6 @@
 import numpy as np
 from sqlalchemy.orm import Session
-
+from app.services.ranking_service import calculate_final_score
 from app.models.memory import Memory
 from app.services.embedding_service import generate_embedding
 
@@ -28,6 +28,9 @@ def search(query: str, top_k: int, db: Session):
             continue
 
         score = cosine_similarity(query_embedding, memory.embedding)
+        
+        final_score = calculate_final_score(score, memory)
+        
         results.append(
             {
                 "id": memory.id,
@@ -35,14 +38,16 @@ def search(query: str, top_k: int, db: Session):
                 "type": memory.type,
                 "category": memory.category,
                 "created_at": memory.created_at,
-                "score": float(score),
+                "updated_at": memory.updated_at,
+                "score": round(float(score), 2),
+                "final_score": round(float(final_score), 2)
             }
         )
 
-    results.sort(key=lambda x: x["score"], reverse=True)
+    results.sort(key=lambda x: x["final_score"], reverse=True)
 
     threshold = 0.5
 
-    results = [result for result in results if result["score"] >= threshold]
+    results = [result for result in results if result["final_score"] >= threshold]
 
     return results[:top_k]
