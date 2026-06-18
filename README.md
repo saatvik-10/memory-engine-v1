@@ -1,6 +1,6 @@
 # Memory Engine V1
 
-Memory Engine V1 is a FastAPI app for storing, listing, fetching, searching, ingesting, and reflecting on memories. It uses SQLAlchemy with PostgreSQL, pgvector embeddings, and a Sentence Transformers model for semantic similarity.
+Memory Engine V1 is a FastAPI app for storing, listing, fetching, searching, ingesting, and reflecting on memories. It uses SQLAlchemy with PostgreSQL and Sentence Transformers embeddings.
 
 ## What is implemented
 
@@ -59,9 +59,20 @@ Current behavior:
 - Similar memories are reinforced when cosine similarity is above `0.85`.
 - Reinforcement increases confidence by `0.05` up to `1.0` and updates `updated_at`.
 
-## Search
+## Search (Hybrid Retrieval + Reranking)
 
-Search embeds the query with `BAAI/bge-small-en-v1.5`, compares it with all stored memory embeddings using cosine similarity, filters results below `0.5`, sorts by score, and returns the top `k` results.
+Search embeds the query with `BAAI/bge-small-en-v1.5`, compares it with all stored memory embeddings using cosine similarity, then reranks results using a **hybrid score** that combines four signals:
+
+| Signal              | Weight | Source                             |
+| ------------------- | ------ | ---------------------------------- |
+| Semantic similarity | 60%    | Cosine similarity of embeddings    |
+| Importance          | 20%    | `importance` field on the memory   |
+| Confidence          | 15%    | `confidence` field on the memory   |
+| Recency             | 5%     | Decays over time from `updated_at` |
+
+The final score is: `similarity × 0.60 + importance × 0.20 + confidence × 0.15 + recency × 0.05`.
+
+Results are reranked by `final_score`, filtered at a `0.5` threshold, and the top `k` are returned. Each result includes both `score` (raw cosine similarity) and `final_score` (reranked hybrid score).
 
 ## Reflection
 
@@ -78,7 +89,6 @@ Reflection is template-based.
 - SQLAlchemy
 - Pydantic
 - PostgreSQL
-- pgvector
 - Sentence Transformers
 
 ## Current limitations
