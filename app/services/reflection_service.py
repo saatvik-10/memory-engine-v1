@@ -30,32 +30,32 @@ def generate_reflections(db: Session):
 
         grouped[category].append(memory)
 
-        for category, memories in grouped.items():
-            if len(memories) < MIN_MEMORIES:
-                continue
+    for category, memories in grouped.items():
+        if len(memories) < MIN_MEMORIES:
+            continue
 
-            reflection_text = REFLECTION_TEMPLATES.get(category)
+        reflection_text = REFLECTION_TEMPLATES.get(category)
 
-            if not reflection_text:
-                continue
+        if not reflection_text:
+            continue
 
-            existing = (
-                db.query(Memory).filter(Memory.memory == reflection_text).first()
-            )
+        existing = (
+            db.query(Memory).filter(Memory.memory == reflection_text).first()
+        )
 
-            if existing:
-                continue
+        if existing:
+            continue
 
-            reflection_payload = MemoryCreate(
-                memory=reflection_text,
-                type="reflection",
-                category="insight",
-                importance=0.95,
-                confidence=0.90,
-            )
+        reflection_payload = MemoryCreate(
+            memory=reflection_text,
+            type="reflection",
+            category="insight",
+            importance=0.95,
+            confidence=0.90,
+        )
 
-            reflection = create(reflection_payload, db)
+        reflection = create(reflection_payload, db)
 
-            created.append(reflection)
+        created.append(reflection)
 
-            return created
+    return created
