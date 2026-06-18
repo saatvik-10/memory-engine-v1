@@ -1,4 +1,4 @@
-# Memory Engine V1
+# Memory Engine V1.5
 
 Memory Engine V1 is a FastAPI app for storing, listing, fetching, searching, ingesting, and reflecting on memories. It uses SQLAlchemy with PostgreSQL and Sentence Transformers embeddings.
 
