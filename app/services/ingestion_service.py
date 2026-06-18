@@ -23,7 +23,17 @@ def ingest_message(message: str, db: Session):
         best_match, best_score = find_similar_memory(memory, db)
 
         if best_match and best_score > 0.85:
-            reinforce_memory(best_match, db)
+            reinforced = reinforce_memory(best_match, db)
+            stored_memories.append(
+                {
+                    "id": reinforced.id,
+                    "memory": reinforced.memory,
+                    "type": reinforced.type,
+                    "category": reinforced.category,
+                    "importance": reinforced.importance,
+                    "confidence": reinforced.confidence,
+                }
+            )
 
         else:
             category = classify_memory(memory)
